@@ -43,6 +43,7 @@ import com.tomkeuper.bedwars.support.version.v1_21_R7.despawnable.DespawnableFac
 import com.tomkeuper.bedwars.support.version.v1_21_R7.despawnable.DespawnableType;
 import com.tomkeuper.bedwars.support.version.v1_21_R7.hologram.HoloLine;
 import com.tomkeuper.bedwars.support.version.v1_21_R7.hologram.Hologram;
+import com.tomkeuper.bedwars.utils.ReflectionUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.core.particles.ParticleParamRedstone;
@@ -365,7 +366,7 @@ public final class v1_21_R7 extends VersionSupport {
     public void registerTntWhitelist(float endStoneBlast, float glassBlast) {
         try {
             // blast resistance
-            Field field = getExplosionResistanceField();
+            Field field = ReflectionUtils.findField(BlockBase.class, "G", "explosionResistance"); // Spigot, Paper (Mojang-mapped)
             // end stone
             field.set(Blocks.go, endStoneBlast);
             // obsidian
@@ -403,21 +404,6 @@ public final class v1_21_R7 extends VersionSupport {
         if (nmsBlock == null) return 0;
         // getExplosionResistance(): a regular method call, which Paper remaps for Spigot-mapped plugins
         return nmsBlock.e();
-    }
-
-    /**
-     * BlockBase#explosionResistance. Spigot keeps the obfuscated name at runtime, while Paper 1.20.5+ runs
-     * Mojang-mapped and does not remap names passed to reflection, so both names have to be tried.
-     */
-    private static Field getExplosionResistanceField() throws NoSuchFieldException {
-        Field field;
-        try {
-            field = BlockBase.class.getDeclaredField("G"); // Spigot
-        } catch (NoSuchFieldException e) {
-            field = BlockBase.class.getDeclaredField("explosionResistance"); // Paper (Mojang-mapped)
-        }
-        field.setAccessible(true);
-        return field;
     }
 
     @Override
