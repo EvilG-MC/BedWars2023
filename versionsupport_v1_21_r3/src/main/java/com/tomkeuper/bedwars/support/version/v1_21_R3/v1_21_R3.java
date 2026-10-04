@@ -351,8 +351,7 @@ public final class v1_21_R3 extends VersionSupport {
     public void registerTntWhitelist(float endStoneBlast, float glassBlast) {
         try {
             // blast resistance
-            Field field = BlockBase.class.getDeclaredField("aI");
-            field.setAccessible(true);
+            Field field = getExplosionResistanceField();
             // end stone
             field.set(Blocks.fU, endStoneBlast);
             // obsidian
@@ -386,20 +385,25 @@ public final class v1_21_R3 extends VersionSupport {
 
     @Override
     public float getBlastResistance(org.bukkit.block.Block bukkitBlock) {
+        net.minecraft.world.level.block.Block nmsBlock = CraftMagicNumbers.getBlock(bukkitBlock.getType());
+        if (nmsBlock == null) return 0;
+        // getExplosionResistance(): a regular method call, which Paper remaps for Spigot-mapped plugins
+        return nmsBlock.e();
+    }
+
+    /**
+     * BlockBase#explosionResistance. Spigot keeps the obfuscated name at runtime, while Paper 1.20.5+ runs
+     * Mojang-mapped and does not remap names passed to reflection, so both names have to be tried.
+     */
+    private static Field getExplosionResistanceField() throws NoSuchFieldException {
+        Field field;
         try {
-            // Convert Bukkit block to NMS Block
-            net.minecraft.world.level.block.Block nmsBlock = CraftMagicNumbers.getBlock(bukkitBlock.getType());
-
-            // Access the 'durability' field
-            Field durabilityField = BlockBase.class.getDeclaredField("aI");
-            durabilityField.setAccessible(true);
-
-            return durabilityField.getFloat(nmsBlock);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            field = BlockBase.class.getDeclaredField("aI"); // Spigot
+        } catch (NoSuchFieldException e) {
+            field = BlockBase.class.getDeclaredField("explosionResistance"); // Paper (Mojang-mapped)
         }
-
-        return 0; // Default if something fails
+        field.setAccessible(true);
+        return field;
     }
 
     @Override
