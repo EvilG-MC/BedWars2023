@@ -95,6 +95,7 @@ import com.tomkeuper.bedwars.support.citizens.JoinNPC;
 import com.tomkeuper.bedwars.support.papi.PAPISupport;
 import com.tomkeuper.bedwars.support.papi.SupportPAPI;
 import com.tomkeuper.bedwars.support.party.*;
+import com.tomkeuper.bedwars.support.rtag.RtagCompat;
 import com.tomkeuper.bedwars.support.vault.NoChat;
 import com.tomkeuper.bedwars.support.vault.NoEconomy;
 import com.tomkeuper.bedwars.support.vault.WithChat;
@@ -207,6 +208,8 @@ public class BedWars extends JavaPlugin {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
+        RtagCompat.patchRemapper();
 
 
         try {
