@@ -22,7 +22,14 @@ repositories {
     maven { url = uri('https://nexus.iridiumdevelopment.net/repository/maven-releases/') } // IridiumColorAPI
     maven { url = uri('https://repo.tomkeuper.com/repository/releases/') } // slimjar
     maven { url = uri('https://repo.alessiodp.com/releases/') } // slimjar - dependencies
-    maven { url = uri('https://jitpack.io') } // Jitpack (RTag) & TAB
+    maven { url = uri('https://jitpack.io') } // Jitpack (TAB)
+    maven { // RTag snapshots
+        url = uri('https://central.sonatype.com/repository/maven-snapshots')
+        mavenContent {
+            snapshotsOnly()
+            includeGroup 'com.saicone'
+        }
+    }
 }
 
 dependencies {
@@ -69,10 +76,10 @@ dependencies {
     compileOnly 'de.dytanic.cloudnet:cloudnet-wrapper-jvm:3.4.5-RELEASE'
     slim 'redis.clients:jedis:5.0.2'
     slim 'com.flowpowered:flow-nbt:2.0.2'
-    slim 'com.saicone.rtag:rtag:1.5.16'
-    slim 'com.saicone.rtag:rtag-block:1.5.16'
-    slim 'com.saicone.rtag:rtag-entity:1.5.16'
-    slim 'com.saicone.rtag:rtag-item:1.5.16'
+    slim 'com.saicone:rtag:1.5.19-SNAPSHOT'
+    slim 'com.saicone:rtag-block:1.5.19-SNAPSHOT'
+    slim 'com.saicone:rtag-entity:1.5.19-SNAPSHOT'
+    slim 'com.saicone:rtag-item:1.5.19-SNAPSHOT'
 }
 
 bukkit {
